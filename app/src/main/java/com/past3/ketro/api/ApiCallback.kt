@@ -3,7 +3,8 @@ package com.past3.ketro.api
 import retrofit2.Call
 import retrofit2.Callback
 
-abstract class ApiCallback<T> : Callback<T> {
+abstract class ApiCallback<T>(val errorHandler: ApiErrorHandler?) : Callback<T> {
+
     override fun onResponse(call: Call<T>, response: retrofit2.Response<T>) =
             if (response.body() != null) {
                 handleResponseData(response.body()!!)
@@ -13,7 +14,9 @@ abstract class ApiCallback<T> : Callback<T> {
 
     protected abstract fun handleResponseData(data: T)
 
-    protected abstract fun handleError(response: retrofit2.Response<T>)
+    protected fun handleError(response: retrofit2.Response<T>){
+        handleException(ApiErrorHandler().getExceptionType(response))
+    }
 
     protected abstract fun handleException(t: Exception)
 
