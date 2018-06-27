@@ -13,29 +13,32 @@ abstract class GenericRequestHandler<R> {
      */
     protected abstract fun makeRequest(): Call<R>
 
-    protected fun doRequestInternal(liveData: MutableLiveData<Wrapper<R>>, Wrapper: Wrapper<R>) {
+    /*
+    Override to give custom implementation of Retrofit enque function
+     */
+    protected fun doRequestInternal(liveData: MutableLiveData<Wrapper<R>>) {
+        val wrapper: Wrapper<R> = Wrapper()
         makeRequest().enqueue(object : ApiCallback<R>(getErrorHandler()) {
             override fun handleResponseData(data: R) {
-                Wrapper.data = data
-                liveData.value = Wrapper
+                wrapper.data = data
+                liveData.value = wrapper
             }
 
             override fun handleException(t: Exception) {
-                Wrapper.exception = t
-                liveData.value = Wrapper
+                wrapper.exception = t
+                liveData.value = wrapper
             }
         })
     }
 
     fun doRequest(): LiveData<Wrapper<R>> {
         val liveData = MutableLiveData<Wrapper<R>>()
-        val wrapper = Wrapper<R>()
-        executeRequest(liveData, wrapper)
+        executeRequest(liveData)
         return liveData
     }
 
-    fun executeRequest(liveData: MutableLiveData<Wrapper<R>>, wrapper: Wrapper<R>) {
-        doRequestInternal(liveData, wrapper)
+    fun executeRequest(liveData: MutableLiveData<Wrapper<R>>) {
+        doRequestInternal(liveData)
     }
 
     /*
