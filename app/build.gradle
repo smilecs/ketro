@@ -3,6 +3,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    bintrayRepo = 'ketro'
+    bintrayName = 'ketro'
+
+    publishedGroupId = 'past3.ketro'
+    libraryName = 'Ketro'
+    artifact = 'ketro'
+    siteUrl = ''
+    licenseName = 'MIT'
+    developerId = 'smilecs'
+    developerEmail = 'mumene@gmail.com'
+    developerName = 'Smile Egbai'
+    allLicenses = ['MIT']
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    libraryDescription = 'Retrofit response wrapper written in Kotlin used to easily wrap REST API response to LiveData and also propagate errors to the calling component'
+    gitUrl = 'https://github.com/smilecs/ketro.git'
+
+    libraryVersion = '1.0.1'
+}
+
 
 android {
     compileSdkVersion 27
@@ -35,3 +58,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+repositories{
+    mavenCentral()
+}
+
+if(project.rootProject.file('local.properties').exists()){
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+}
+
