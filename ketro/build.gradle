@@ -21,8 +21,8 @@ ext {
     licenseUrl = 'https://opensource.org/licenses/MIT'
     libraryDescription = 'Retrofit response wrapper written in Kotlin used to easily wrap REST API response to LiveData and also propagate errors to the calling component'
     gitUrl = 'https://github.com/smilecs/ketro.git'
-
-    libraryVersion = '1.0.3'
+    configurations = ['archives']
+    libraryVersion = '1.0.4'
 }
 
 android {
