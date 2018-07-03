@@ -67,5 +67,7 @@ fun getManufacturer() {
      LobbyRequest(LobbyRequest.MANUFACTURER).executeRequest(responseLiveData)
 }
 ```
-.......<b>More info coming soon on error handling</b>
+After the request is resolved, the `LiveData` object passed in, has it's value set with the response and all active observers of the `LiveData` are triggered.
+
+.......<b>More info on passing custom error exception handling coming soon</b>
 ### Also for any request or anything unclear with the library feel free to hit me up, on mumene@gmail.com or create an issue ticket.
