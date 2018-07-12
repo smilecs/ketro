@@ -69,5 +69,9 @@ fun getManufacturer() {
 ```
 After the request is resolved, the `LiveData` object passed in, has it's value set with the response and all active observers of the `LiveData` are triggered.
 
+## Error Handling
+
+Handling custom errors with Ketro is quite simple, the library expects you use either the response code gotten from your server or a custom message gotten from your server and map an Exception to which would be return to the request class by overriding the error handler object to return your class with your error mapping implementation.
+Note if this is not provided, a default exception is returned and propaged to the views callback interface.
 .......<b>More info on passing custom error exception handling coming soon</b>
 ### Also for any request or anything unclear with the library feel free to hit me up, on mumene@gmail.com or create an issue ticket.
