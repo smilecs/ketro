@@ -4,16 +4,10 @@ handling both from the retrofit calls all the way to displaying an error in the 
 so errors can easily be grouped and managed with adequate actions and feedback to your app users.
 
 ## Include Dependency
-Currently Ketro is hosted on MavenCentral, just add 
+Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
 ```
 implementation 'past3.smilecs:ketro:1.0.4.2'
 ```
-to your project gradle file then open your root gradle file and add the below lines
-```
-maven {
-            url  "https://dl.bintray.com/smilecs/ketro"
-        }
-```         
 
 ## Ketro Request methods
 Ketro offers a selection of methods that wrap your retrofit calls and return a LiveData object with a wrapper that contains an exception object if the request was unsuccessful or as the user defines.
