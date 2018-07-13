@@ -10,7 +10,7 @@ open class ApiErrorHandler {
     /* Method should be overided to return custom exception type which
     *  would be a sub-type of Exception
     */
-    fun getExceptionType(response: retrofit2.Response<*>): Exception {
+   open fun getExceptionType(response: retrofit2.Response<*>): Exception {
         return Exception()
     }
 
