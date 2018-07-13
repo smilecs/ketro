@@ -6,7 +6,7 @@ so errors can easily be grouped and managed with adequate actions and feedback t
 ## Include Dependency
 Currently Ketro is hosted on MavenCentral, just add 
 ```
-implementation 'past3.smilecs:ketro:1.0.3'
+implementation 'past3.smilecs:ketro:1.0.4.2'
 ```
 to your project gradle file then open your root gradle file and add the below lines
 ```
@@ -73,5 +73,78 @@ After the request is resolved, the `LiveData` object passed in, has it's value s
 
 Handling custom errors with Ketro is quite simple, the library expects you use either the response code gotten from your server or a custom message gotten from your server and map an Exception to which would be return to the request class by overriding the error handler object to return your class with your error mapping implementation.
 Note if this is not provided, a default exception is returned and propaged to the views callback interface.
-.......<b>More info on passing custom error exception handling coming soon</b>
+First off you need to create a class which extends `ApiErrorHandler` then you can either put your own Exception cases there or create a new class for each exception case depends on your preference.
+
+```
+import com.past3.ketro.api.ApiErrorHandler
+import retrofit2.Response
+
+class LobbyErrorHandler : ApiErrorHandler() {
+
+    override fun getExceptionType(response: Response<*>): Exception {
+        return when (response.code()) {
+            LOGIN_ERROR -> LoginException()
+            UPDATE_ERROR -> UpdateException()
+            else -> Exception()
+        }
+    }
+
+    companion object ErrorConfig {
+        const val LOGIN_ERROR = 401
+        const val UPDATE_ERROR = 404
+
+        class LoginException : Exception() {
+            override val message = "Error processing login details"
+        }
+
+        class UpdateException : Exception() {
+            override val message = "Error updating details"
+        }
+    }
+
+}
+```
+Now you can choose to map your errors any you like to an exception, for me I prefer to use http error statuss codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
+
+Also remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be hadnled by Ketro.
+
+```
+class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrapper>() {
+
+    private val lobbyService: LobbyService by lazy {
+        NetModule.provideRetrofit().create(LobbyService::class.java)
+    }
+    private val pageSize = 10
+
+    override val errorHandler: ApiErrorHandler = LobbyErrorHandler()
+
+    override fun makeRequest(): Call<ResponseWrapper> {
+        return lobbyService.getManufacturers(page, pageSize, Urls.KEY)
+    }
+}
+```
+
+
+After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
+```
+viewModel.responseData().observe(this, object : Kobserver<List<GenericVehicleContainer>>() {
+            override fun onException(exception: Exception) {
+                if(exception is LobbyErrorHandler.ErrorConfig.UpdateException){
+                    //handle error show dialog or redirect user/etc...
+                }
+            }
+
+            override fun onSuccess(data: List<GenericVehicleContainer>) {
+                swipeRefresh.isRefreshing = false
+                searchView.visibility = View.VISIBLE
+                helperContainer.visibility = View.VISIBLE
+
+                viewModel.genericList.addAll(data)
+                vehicleAdapter.notifyDataSetChanged()
+                searchView.setAdapter(searchAdapter)
+                searchAdapter.notifyDataSetChanged()
+
+            }
+        })
+```
 ### Also for any request or anything unclear with the library feel free to hit me up, on mumene@gmail.com or create an issue ticket.
