@@ -5,7 +5,7 @@ so errors can easily be grouped and managed with adequate actions and feedback t
 
 ## Include Dependency
 Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
-```
+```groovy
 implementation 'past3.smilecs:ketro:1.0.4.2'
 ```
 
@@ -17,7 +17,7 @@ These methods are:
 ## Usage
 Inorder to use these wrappers for your request, you must extend the ketro `GenericRequestHandler<T>` which takes in a class type which you would like to observe with livedata.
 
-``` 
+```kotlin
 class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<ResponseWrapper>() {
     private val lobbyService: LobbyService by lazy {
         NetModule.provideRetrofit().create(LobbyService::class.java)
@@ -34,7 +34,7 @@ class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<Re
 ##### After creating your request handler as above,
 To make the actual api call, create an object of the request class and call the `doRequest()`.
 
-```
+```kotlin
 /...../
 fun getManufacturer() {
         LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<GenericVehicleContainer>() {
@@ -55,7 +55,7 @@ As noted above the Request class `doRequest()` executes the api call and returns
 There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios
 instead of calling `doRequest()` we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)` this method needs the specificed response type to be wrapped with a Ketro Wrapper class so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
 
-```
+```kotlin
 val wrap = MutableLiveData<Wrapper<VehicleContainer>>()
 fun getManufacturer() {
      LobbyRequest(LobbyRequest.MANUFACTURER).executeRequest(responseLiveData)
@@ -69,7 +69,7 @@ Handling custom errors with Ketro is quite simple, the library expects you use e
 Note if this is not provided, a default exception is returned and propaged to the views callback interface.
 First off you need to create a class which extends `ApiErrorHandler` then you can either put your own Exception cases there or create a new class for each exception case depends on your preference.
 
-```
+```kotlin
 import com.past3.ketro.api.ApiErrorHandler
 import retrofit2.Response
 
@@ -102,7 +102,7 @@ Now you can choose to map your errors any you like to an exception, for me I pre
 
 Also remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be hadnled by Ketro.
 
-```
+```kotlin
 class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrapper>() {
 
     private val lobbyService: LobbyService by lazy {
@@ -120,7 +120,7 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrappe
 
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
-```
+```kotlin
 viewModel.responseData().observe(this, object : Kobserver<List<GenericVehicleContainer>>() {
             override fun onException(exception: Exception) {
                 if(exception is LobbyErrorHandler.ErrorConfig.UpdateException){
