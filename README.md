@@ -21,12 +21,12 @@ These methods are:
 Inorder to use these wrappers for your request, you must extend the ketro `GenericRequestHandler<T>` which takes in a class type which you would like to observe with livedata.
 
 ```kotlin
-class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<ResponseWrapper>() {
+class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<VehicleContainer>() {
     private val lobbyService: LobbyService by lazy {
         NetModule.provideRetrofit().create(LobbyService::class.java)
     }
 
-    override fun makeRequest(): Call<ResponseWrapper> {
+    override fun makeRequest(): Call<VehicleContainer> {
         //Retrofit interface method
         return lobbyService.getManufacturers()
         }
@@ -55,8 +55,8 @@ fun getManufacturer() {
 As noted above the Request class `doRequest()` executes the api call and returns an observable live data object. Now Ketro offers an extension of the Android Observer class(Kobserver), which attempts to handle api errors/exceptions delegated by the user, hence why we have an exception and a success callback.
 * Note Using the Kobserver with the returned api response is optional, but recommended for proper error handling.
 
-There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios
-instead of calling `doRequest()` we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)` this method needs the specificed response type to be wrapped with a Ketro Wrapper class so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
+There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios,
+instead of calling `doRequest()`, we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)`. This method needs the specified response type to be wrapped with the `Wrapper` class in Ketro so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
 
 ```kotlin
 val wrap = MutableLiveData<Wrapper<VehicleContainer>>()
