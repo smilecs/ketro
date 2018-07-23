@@ -40,12 +40,12 @@ To make the actual api call, create an object of the request class and call the 
 ```kotlin
 /...../
 fun getManufacturer() {
-        LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<GenericVehicleContainer>() {
+        LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<VehicleContainer>() {
             override fun onException(exception: Exception) {
                 //handle exceptions here, custom exception types inclusive
             }
 
-            override fun onSuccess(data: GenericVehicleContainer) {
+            override fun onSuccess(data: VehicleContainer) {
                 
             }
         })
@@ -101,21 +101,20 @@ class LobbyErrorHandler : ApiErrorHandler() {
 
 }
 ```
-Now you can choose to map your errors any you like to an exception, for me I prefer to use http error statuss codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
+Now you can choose to map your errors any you like to an exception, for me I prefer to use http error status codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
 
-Also remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be hadnled by Ketro.
+Also, remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be handled by Ketro.
 
 ```kotlin
-class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrapper>() {
+class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContainer>() {
 
     private val lobbyService: LobbyService by lazy {
         NetModule.provideRetrofit().create(LobbyService::class.java)
     }
-    private val pageSize = 10
 
     override val errorHandler: ApiErrorHandler = LobbyErrorHandler()
 
-    override fun makeRequest(): Call<ResponseWrapper> {
+    override fun makeRequest(): Call<VehicleContainer> {
         return lobbyService.getManufacturers(page, pageSize, Urls.KEY)
     }
 }
@@ -124,14 +123,15 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrappe
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
 ```kotlin
-viewModel.responseData().observe(this, object : Kobserver<List<GenericVehicleContainer>>() {
+viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>>() {
             override fun onException(exception: Exception) {
                 if(exception is LobbyErrorHandler.ErrorConfig.UpdateException){
-                    //handle error show dialog or redirect user/etc...
+                    // handle error e.g. show dialog, redirect user etc.
                 }
             }
 
-            override fun onSuccess(data: List<GenericVehicleContainer>) {
+            override fun onSuccess(data: List<VehicleContainer>) {
+                // Update UI
                 swipeRefresh.isRefreshing = false
                 searchView.visibility = View.VISIBLE
                 helperContainer.visibility = View.VISIBLE
