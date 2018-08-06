@@ -19,6 +19,8 @@
         android:hint="Enter GitHub Username"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:maxLines="1"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout"
         app:layout_constraintEnd_toStartOf="@+id/searchButton"
         app:layout_constraintStart_toStartOf="parent"
