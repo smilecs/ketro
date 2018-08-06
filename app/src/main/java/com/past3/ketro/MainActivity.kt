@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
             override fun onException(exception: Exception) {
-                toggleViews(false)
                 when(exception){
                     is GitHubErrorHandler.ErrorConfig.NetworkException -> {
                         Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
@@ -54,6 +53,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             override fun onSuccess(data: ResponseModel) {
+                if(data.items.isEmpty()){
+                    toggleViews(false)
+                    return
+                }
                 toggleViews(true)
                 viewModel.list.let {
                     it.clear()
