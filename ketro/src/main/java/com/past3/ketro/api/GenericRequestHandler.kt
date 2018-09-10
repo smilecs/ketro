@@ -17,12 +17,12 @@ abstract class GenericRequestHandler<R> {
     Override errorHandler() to return custom ApiErrorHandler object
     where error/exception creation mapping resides.
      */
-    public open val errorHandler: ApiErrorHandler = ApiErrorHandler()
+    open val errorHandler: ApiErrorHandler = ApiErrorHandler()
 
     /*
     Override to give custom implementation of Retrofit enque function
      */
-    fun doRequestInternal(liveData: MutableLiveData<Wrapper<R>>) {
+    open fun doRequestInternal(liveData: MutableLiveData<Wrapper<R>>) {
         val wrapper: Wrapper<R> = Wrapper()
         makeRequest().enqueue(object : ApiCallback<R>(errorHandler) {
             override fun handleResponseData(data: R) {
@@ -43,7 +43,7 @@ abstract class GenericRequestHandler<R> {
         return liveData
     }
 
-    fun executeRequest(liveData: MutableLiveData<Wrapper<R>>) {
+    open fun executeRequest(liveData: MutableLiveData<Wrapper<R>>) {
         doRequestInternal(liveData)
     }
 }
