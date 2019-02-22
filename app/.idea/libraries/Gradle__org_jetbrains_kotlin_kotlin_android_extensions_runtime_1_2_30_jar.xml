@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.2.30@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions-runtime/1.2.30/1b4dcd53de82dabc64e38fc30672f85447691fed/kotlin-android-extensions-runtime-1.2.30.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-android-extensions-runtime/1.2.30/748cd76c8c42f175496133760342d1b084dc018e/kotlin-android-extensions-runtime-1.2.30-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

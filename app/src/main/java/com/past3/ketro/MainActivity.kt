@@ -1,36 +1,81 @@
 package com.past3.ketro
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_main.*
-import test.smile.lobby.fragment.MainFragment
+import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import android.widget.Toast
+import com.past3.ketro.api.Kobserver
+import kotlinx.android.synthetic.main.main_activity.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private val viewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
+    private val listAdapter by lazy {
+        MyListAdapter()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment())
-                .commit()
+        setContentView(R.layout.main_activity)
+
+        recyclerView.let {
+            it.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            it.adapter = listAdapter
+            it.setHasFixedSize(true)
+        }
+
+        listAdapter.submitList(viewModel.list)
+        searchButton.setOnClickListener(this@MainActivity)
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    override fun onClick(v: View?) {
+        recyclerView.visibility = View.GONE
+        errorView.visibility = View.GONE
+        progressBar.visibility =  View.VISIBLE
+
+        viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
+            override fun onException(exception: Exception) {
+                when(exception){
+                    is GitHubErrorHandler.ErrorConfig.NetworkException -> {
+                        Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+                    }
+                    is GitHubErrorHandler.ErrorConfig.GitHubException -> {
+                        Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+                    }
+                    else ->  Toast.makeText(this@MainActivity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onSuccess(data: ResponseModel) {
+                if(data.items.isEmpty()){
+                    toggleViews(false)
+                    return
+                }
+                toggleViews(true)
+                viewModel.list.let {
+                    it.clear()
+                    it.addAll(data.items)
+                    listAdapter.submitList(it)
+                }
+            }
+
+        })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+    fun toggleViews(dataAvailable: Boolean){
+        progressBar.visibility = View.GONE
+        if(dataAvailable) {
+            errorView.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.GONE
+            errorView.visibility = View.VISIBLE
         }
     }
 }

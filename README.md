@@ -1,12 +1,15 @@
 # ketro
-This is a Retrofit response wrapper written in Kotlin that can be used to easily wrap REST API response to LiveData and exception/error
+
+![Alt text](ketro.png?raw=true "Title")
+
+Ketro is a Retrofit response wrapper written in Kotlin that can be used to easily wrap REST API response to LiveData and exception/error
 handling both from the retrofit calls all the way to displaying an error in the view. Ketro allows and encourages the addition of custom exceptions
 so errors can easily be grouped and managed with adequate actions and feedback to your app users.
 
 ## Include Dependency
 Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
 ```groovy
-implementation 'past3.smilecs:ketro:1.0.4.2'
+implementation 'past3.smilecs.ketro:ketro:1.0.4.3'
 ```
 
 ## Ketro Request methods
@@ -18,12 +21,12 @@ These methods are:
 Inorder to use these wrappers for your request, you must extend the ketro `GenericRequestHandler<T>` which takes in a class type which you would like to observe with livedata.
 
 ```kotlin
-class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<ResponseWrapper>() {
+class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<VehicleContainer>() {
     private val lobbyService: LobbyService by lazy {
         NetModule.provideRetrofit().create(LobbyService::class.java)
     }
 
-    override fun makeRequest(): Call<ResponseWrapper> {
+    override fun makeRequest(): Call<VehicleContainer> {
         //Retrofit interface method
         return lobbyService.getManufacturers()
         }
@@ -37,12 +40,12 @@ To make the actual api call, create an object of the request class and call the 
 ```kotlin
 /...../
 fun getManufacturer() {
-        LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<GenericVehicleContainer>() {
+        LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<VehicleContainer>() {
             override fun onException(exception: Exception) {
                 //handle exceptions here, custom exception types inclusive
             }
 
-            override fun onSuccess(data: GenericVehicleContainer) {
+            override fun onSuccess(data: VehicleContainer) {
                 
             }
         })
@@ -52,8 +55,8 @@ fun getManufacturer() {
 As noted above the Request class `doRequest()` executes the api call and returns an observable live data object. Now Ketro offers an extension of the Android Observer class(Kobserver), which attempts to handle api errors/exceptions delegated by the user, hence why we have an exception and a success callback.
 * Note Using the Kobserver with the returned api response is optional, but recommended for proper error handling.
 
-There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios
-instead of calling `doRequest()` we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)` this method needs the specificed response type to be wrapped with a Ketro Wrapper class so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
+There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios,
+instead of calling `doRequest()`, we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)`. This method needs the specified response type to be wrapped with the `Wrapper` class in Ketro so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
 
 ```kotlin
 val wrap = MutableLiveData<Wrapper<VehicleContainer>>()
@@ -98,21 +101,20 @@ class LobbyErrorHandler : ApiErrorHandler() {
 
 }
 ```
-Now you can choose to map your errors any you like to an exception, for me I prefer to use http error statuss codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
+Now you can choose to map your errors any you like to an exception, for me I prefer to use http error status codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
 
-Also remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be hadnled by Ketro.
+Also, remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be handled by Ketro.
 
 ```kotlin
-class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrapper>() {
+class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContainer>() {
 
     private val lobbyService: LobbyService by lazy {
         NetModule.provideRetrofit().create(LobbyService::class.java)
     }
-    private val pageSize = 10
 
     override val errorHandler: ApiErrorHandler = LobbyErrorHandler()
 
-    override fun makeRequest(): Call<ResponseWrapper> {
+    override fun makeRequest(): Call<VehicleContainer> {
         return lobbyService.getManufacturers(page, pageSize, Urls.KEY)
     }
 }
@@ -121,14 +123,15 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<ResponseWrappe
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
 ```kotlin
-viewModel.responseData().observe(this, object : Kobserver<List<GenericVehicleContainer>>() {
+viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>>() {
             override fun onException(exception: Exception) {
                 if(exception is LobbyErrorHandler.ErrorConfig.UpdateException){
-                    //handle error show dialog or redirect user/etc...
+                    // handle error e.g. show dialog, redirect user etc.
                 }
             }
 
-            override fun onSuccess(data: List<GenericVehicleContainer>) {
+            override fun onSuccess(data: List<VehicleContainer>) {
+                // Update UI
                 swipeRefresh.isRefreshing = false
                 searchView.visibility = View.VISIBLE
                 helperContainer.visibility = View.VISIBLE

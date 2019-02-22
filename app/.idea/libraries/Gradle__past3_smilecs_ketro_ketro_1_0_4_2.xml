@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: past3.smilecs.ketro:ketro-1.0.4.2">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ketro-1.0.4.2.aar/513e0a3876cb42d51d647f7f9a60375d/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/ketro-1.0.4.2.aar/513e0a3876cb42d51d647f7f9a60375d/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/past3.smilecs.ketro/ketro/1.0.4.2/2a66756ca3c23dbbb1f0bf5caceb49e7249bf446/ketro-1.0.4.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
