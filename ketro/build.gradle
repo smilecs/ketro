@@ -22,7 +22,7 @@ ext {
     libraryDescription = 'Retrofit response wrapper written in Kotlin used to easily wrap REST API response to LiveData and also propagate errors to the calling component'
     gitUrl = 'https://github.com/smilecs/ketro.git'
     configurations = ['archives']
-    libraryVersion = '1.2.4'
+    libraryVersion = '1.0.4.4'
 }
 
 android {
@@ -33,7 +33,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 3
+        versionCode 2
         versionName "1.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -56,11 +56,12 @@ dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     kapt "android.arch.lifecycle:compiler:1.1.1"
     testImplementation 'junit:junit:4.12'
-    api project(path: ':kcore')
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 repositories{
     mavenCentral()

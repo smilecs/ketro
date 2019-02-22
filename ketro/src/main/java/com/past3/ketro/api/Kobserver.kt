@@ -1,8 +1,8 @@
 package com.past3.ketro.api
 
 import android.arch.lifecycle.Observer
-import com.past3.ketro.kcore.model.StatusCode
-import com.past3.ketro.kcore.model.Wrapper
+import com.past3.ketro.model.StatusCode
+import com.past3.ketro.model.Wrapper
 
 /**
  *  @constructor Kobserver takes in a function to handle exceptions, note when
@@ -53,7 +53,7 @@ abstract class Kobserver<T>(private val exceptionHandler: ((Exception) -> Unit)?
      * takes in a StatusCode, so you can determine the state of the requests
      */
 
-    open fun finish(statusCode: StatusCode) {
+    open fun finish(code: StatusCode) {
         //Check for 20x and perform operation
     }
 }
