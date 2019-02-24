@@ -88,14 +88,19 @@ class LobbyErrorHandler : ApiErrorHandler() {
     companion object ErrorConfig {
         const val LOGIN_ERROR = 401
         const val UPDATE_ERROR = 404
+        
         //sub-classing kexception allows you to have access to the errorbody
         class LoginException(val errorBody: ResponseBody?, message: String?, cause: Throwable? = null)
          : Kexception(message, cause) {
+         
             override val message = "Error processing login details"
+            
         }
 
         class UpdateException : Exception() {
+        
             override val message = "Error updating details"
+            
         }
     }
 
@@ -122,9 +127,11 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContain
 
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
+
 Here you can Also check if the exception is of type Kexception and use the errorBody included within the object.
 Note: the onException override is now optional, and as well you can pass in a function into the kobserver
 constructor to handle your errors and as well get a cleaner interface
+Here you can Also check if the exception is of type Kexception and use the errorBody included within the object
 ```kotlin
 viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>>() {
             override fun onException(exception: Exception) {
