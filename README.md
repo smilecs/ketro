@@ -71,6 +71,8 @@ After the request is resolved, the `LiveData` object passed in, has it's value s
 Handling custom errors with Ketro is quite simple, the library expects you use either the response code gotten from your server or a custom message gotten from your server and map an Exception to which would be return to the request class by overriding the error handler object to return your class with your error mapping implementation.
 Note if this is not provided, a default exception is returned and propaged to the views callback interface.
 First off you need to create a class which extends `ApiErrorHandler` then you can either put your own Exception cases there or create a new class for each exception case depends on your preference.
+Ketro now provides a Kexception class which return the Respoonse Error Body, though the getExceptionType returns the exception
+super type, so as to make using the Kexception class optional.
 
 ```kotlin
 import com.past3.ketro.api.ApiErrorHandler
@@ -80,7 +82,7 @@ class LobbyErrorHandler : ApiErrorHandler() {
 
     override fun getExceptionType(response: Response<*>): Exception {
         return when (response.code()) {
-            LOGIN_ERROR -> LoginException()
+            LOGIN_ERROR -> LoginException(response.errorBody(), response.message())
             UPDATE_ERROR -> UpdateException()
             else -> Exception()
         }
@@ -90,7 +92,7 @@ class LobbyErrorHandler : ApiErrorHandler() {
         const val LOGIN_ERROR = 401
         const val UPDATE_ERROR = 404
 
-        class LoginException : Exception() {
+        class LoginException(val errorBody: ResponseBody?, message: String?, cause: Throwable? = null) : Kexception(message, cause) {
             override val message = "Error processing login details"
         }
 
@@ -122,6 +124,7 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContain
 
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
+Here you can Also check if the exception is of type Kexception and use the errorBody included within the object
 ```kotlin
 viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>>() {
             override fun onException(exception: Exception) {
