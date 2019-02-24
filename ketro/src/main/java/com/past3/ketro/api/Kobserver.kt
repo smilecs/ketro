@@ -53,7 +53,7 @@ abstract class Kobserver<T>(private val exceptionHandler: ((Exception) -> Unit)?
      * takes in a StatusCode, so you can determine the state of the requests
      */
 
-    open fun finish(code: StatusCode) {
+    open fun finish(statusCode: StatusCode) {
         //Check for 20x and perform operation
     }
 }
