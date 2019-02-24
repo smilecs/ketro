@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.past3.ketro.api.Kobserver
+import com.past3.ketro.model.Kexception
 import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -34,26 +35,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    private fun userErrorHanlder(ex: Exception) {
+        when (ex) {
+            is GitHubErrorHandler.ErrorConfig.NetworkException -> {
+                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+            }
+            is GitHubErrorHandler.ErrorConfig.GitHubException -> {
+                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+            }
+            else -> Toast.makeText(this@MainActivity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun onClick(v: View?) {
         recyclerView.visibility = View.GONE
         errorView.visibility = View.GONE
-        progressBar.visibility =  View.VISIBLE
+        progressBar.visibility = View.VISIBLE
 
         viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
-            override fun onException(exception: Exception) {
-                when(exception){
-                    is GitHubErrorHandler.ErrorConfig.NetworkException -> {
-                        Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
-                    }
-                    is GitHubErrorHandler.ErrorConfig.GitHubException -> {
-                        Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
-                    }
-                    else ->  Toast.makeText(this@MainActivity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
-                }
-            }
-
             override fun onSuccess(data: ResponseModel) {
-                if(data.items.isEmpty()){
+                if (data.items.isEmpty()) {
                     toggleViews(false)
                     return
                 }
@@ -68,9 +69,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    fun toggleViews(dataAvailable: Boolean){
+    fun toggleViews(dataAvailable: Boolean) {
         progressBar.visibility = View.GONE
-        if(dataAvailable) {
+        if (dataAvailable) {
             errorView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         } else {
