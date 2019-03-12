@@ -1,7 +1,7 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.kcore.model.Kexception
-import com.past3.ketro.kcore.model.StatusCode
+import com.past3.ketro.model.Kexception
+import com.past3.ketro.model.StatusCode
 
 /*
 *ApiErrorHandler class should be extended to handle custom exceptions

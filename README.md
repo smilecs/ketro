@@ -9,7 +9,7 @@ so errors can easily be grouped and managed with adequate actions and feedback t
 ## Include Dependency
 Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
 ```groovy
-implementation 'past3.smilecs.ketro:ketro:1.0.4.3'
+implementation 'past3.smilecs.ketro:ketro:1.1.1'
 ```
 
 ## Ketro Request methods
@@ -31,14 +31,12 @@ class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<Ve
         return lobbyService.getManufacturers()
         }
     }
-} 
 ```
 * Note put in your retrofit request call into the `makeRequest()` method.
 ##### After creating your request handler as above,
 To make the actual api call, create an object of the request class and call the `doRequest()`.
 
 ```kotlin
-/...../
 fun getManufacturer() {
         LobbyRequest(LobbyRequest.MANUFACTURER).doRequest().observe(this, object : Kobserver<VehicleContainer>() {
             override fun onException(exception: Exception) {
@@ -50,7 +48,6 @@ fun getManufacturer() {
             }
         })
     }
-/....../    
 ```
 As noted above the Request class `doRequest()` executes the api call and returns an observable live data object. Now Ketro offers an extension of the Android Observer class(Kobserver), which attempts to handle api errors/exceptions delegated by the user, hence why we have an exception and a success callback.
 * Note Using the Kobserver with the returned api response is optional, but recommended for proper error handling.
@@ -71,6 +68,8 @@ After the request is resolved, the `LiveData` object passed in, has it's value s
 Handling custom errors with Ketro is quite simple, the library expects you use either the response code gotten from your server or a custom message gotten from your server and map an Exception to which would be return to the request class by overriding the error handler object to return your class with your error mapping implementation.
 Note if this is not provided, a default exception is returned and propaged to the views callback interface.
 First off you need to create a class which extends `ApiErrorHandler` then you can either put your own Exception cases there or create a new class for each exception case depends on your preference.
+Ketro now provides a Kexception class which return the Respoonse Error Body, though the getExceptionType returns the exception
+super type, so as to make using the Kexception class optional.
 
 ```kotlin
 import com.past3.ketro.api.ApiErrorHandler
@@ -80,7 +79,7 @@ class LobbyErrorHandler : ApiErrorHandler() {
 
     override fun getExceptionType(response: Response<*>): Exception {
         return when (response.code()) {
-            LOGIN_ERROR -> LoginException()
+            LOGIN_ERROR -> LoginException(response.errorBody(), response.message())
             UPDATE_ERROR -> UpdateException()
             else -> Exception()
         }
@@ -89,8 +88,9 @@ class LobbyErrorHandler : ApiErrorHandler() {
     companion object ErrorConfig {
         const val LOGIN_ERROR = 401
         const val UPDATE_ERROR = 404
-
-        class LoginException : Exception() {
+        //sub-classing kexception allows you to have access to the errorbody
+        class LoginException(val errorBody: ResponseBody?, message: String?, cause: Throwable? = null)
+         : Kexception(message, cause) {
             override val message = "Error processing login details"
         }
 
@@ -101,7 +101,7 @@ class LobbyErrorHandler : ApiErrorHandler() {
 
 }
 ```
-Now you can choose to map your errors any you like to an exception, for me I prefer to use http error status codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
+Now you can choose to map your errors anyway you like to an exception, for me I prefer to use http error status codes to determine what kind of exception I return to the Wrapper object you can as well choose to return an error object from your server and map that out to your exception, the possibilities are endless.
 
 Also, remember the request class you created earlier? you will need to override the `ApiErrorhandler` field and initialise your custom class, the rest will be handled by Ketro.
 
@@ -122,12 +122,20 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContain
 
 
 After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
+Here you can Also check if the exception is of type Kexception and use the errorBody included within the object.
+Note: the onException override is now optional, and as well you can pass in a function into the kobserver
+constructor to handle your errors and as well get a cleaner interface
 ```kotlin
 viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>>() {
             override fun onException(exception: Exception) {
-                if(exception is LobbyErrorHandler.ErrorConfig.UpdateException){
+             when (exception) {
+                is Kexception -> {
+                    //exception.errorBody do something with errorBody
+                 }
+                 is LobbyErrorHandler.ErrorConfig.UpdateException ->{
                     // handle error e.g. show dialog, redirect user etc.
-                }
+                 }
+             }
             }
 
             override fun onSuccess(data: List<VehicleContainer>) {
@@ -142,6 +150,32 @@ viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>
                 searchAdapter.notifyDataSetChanged()
 
             }
+        })
+```
+### Alternatively
+Passing in a error handling function will allow you to omit the `onException` callback which is
+now optional, note that passing in a function will stop the `onException` callback from executing
+so it's a choice between using either one.
+```kotlin
+
+private fun userErrorHanlder(ex: Exception) {
+        //handle errors here
+}
+
+ viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>(::userErrorHanlder) {
+            override fun onSuccess(data: ResponseModel) {
+                if (data.items.isEmpty()) {
+                    toggleViews(false)
+                    return
+                }
+                toggleViews(true)
+                viewModel.list.let {
+                    it.clear()
+                    it.addAll(data.items)
+                    listAdapter.submitList(it)
+                }
+            }
+
         })
 ```
 ### Also for any request or anything unclear with the library feel free to hit me up, on mumene@gmail.com or create an issue ticket.

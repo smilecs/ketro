@@ -25,7 +25,7 @@ abstract class GenericRequestHandler<R> {
      */
     open fun doRequestInternal(liveData: MutableLiveData<Wrapper<R>>) {
         makeRequest().enqueue(object : ApiCallback<R>(errorHandler) {
-            override fun handleResponseData(data: R, statusCode: StatusCode) {
+            override fun handleResponseData(data: R?, statusCode: StatusCode) {
                 liveData.value = Wrapper(data = data, statusCode = statusCode)
             }
 
