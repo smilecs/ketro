@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun userErrorHanlder(ex: Exception) {
         when (ex) {
             is GitHubErrorHandler.ErrorConfig.NetworkException -> {
-                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, ex.message, Toast.LENGTH_LONG).show()
             }
             is GitHubErrorHandler.ErrorConfig.GitHubException -> {
-                Toast.makeText(this@MainActivity, exception.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, ex.message, Toast.LENGTH_LONG).show()
             }
             else -> Toast.makeText(this@MainActivity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
         }
