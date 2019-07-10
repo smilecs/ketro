@@ -7,8 +7,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.past3.ketro.api.Kobserver
-import com.past3.ketro.model.Kexception
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -51,8 +52,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.visibility = View.GONE
         errorView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
-
-        viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
+        GlobalScope.launch {
+            RR().doRequest()
+        }
+        /*viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
             override fun onSuccess(data: ResponseModel) {
                 if (data.items.isEmpty()) {
                     toggleViews(false)
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-        })
+        })*/
     }
 
     fun toggleViews(dataAvailable: Boolean) {
