@@ -1,12 +1,12 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.kcore.model.StatusCode
-import com.past3.ketro.kcore.model.Wrapper
+import com.past3.ketro.model.StatusCode
+import com.past3.ketro.model.Wrapper
 import retrofit2.Response
 
 abstract class Request<T> {
 
-    open var errorHandler: ApiErrorHandler = ApiErrorHandler()
+    var errorHandler: ApiErrorHandler = ApiErrorHandler()
 
     protected abstract suspend fun makeRequest(): Response<T>
 
