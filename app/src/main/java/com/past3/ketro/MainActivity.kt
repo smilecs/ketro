@@ -8,8 +8,6 @@ import android.view.View
 import android.widget.Toast
 import com.past3.ketro.api.Kobserver
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -34,6 +32,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         listAdapter.submitList(viewModel.list)
         searchButton.setOnClickListener(this@MainActivity)
 
+        viewModel._liveData.observe(this, object : Kobserver<ResponseModel>() {
+            override fun onSuccess(data: ResponseModel) {
+                Toast.makeText(this@MainActivity, "Works", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onException(exception: Exception) {
+                userErrorHanlder(exception)
+            }
+        })
+
     }
 
     private fun userErrorHanlder(ex: Exception) {
@@ -52,9 +60,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.visibility = View.GONE
         errorView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
-        GlobalScope.launch {
-            RR().doRequest()
-        }
+        viewModel.getGitHubUser()
         /*viewModel.searchUser(editText.text.toString()).observe(this, object : Kobserver<ResponseModel>() {
             override fun onSuccess(data: ResponseModel) {
                 if (data.items.isEmpty()) {
