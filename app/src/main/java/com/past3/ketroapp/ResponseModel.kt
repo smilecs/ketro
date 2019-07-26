@@ -1,4 +1,4 @@
-package com.past3.ketro
+package com.past3.ketroapp
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

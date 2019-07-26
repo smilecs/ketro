@@ -6,7 +6,7 @@ import retrofit2.Response
 
 abstract class Request<T> {
 
-    var errorHandler: ApiErrorHandler = ApiErrorHandler()
+    open var errorHandler: ApiErrorHandler = ApiErrorHandler()
 
     protected abstract suspend fun makeRequest(): Response<T>
 
