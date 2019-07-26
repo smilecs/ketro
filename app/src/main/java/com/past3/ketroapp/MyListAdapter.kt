@@ -1,4 +1,4 @@
-package com.past3.ketro
+package com.past3.ketroapp
 
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil

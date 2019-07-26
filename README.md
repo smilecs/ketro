@@ -11,7 +11,7 @@ so errors can easily be grouped and managed with adequate actions and feedback t
 Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
 
 ```groovy
-implementation 'past3.smilecs.ketro:ketro:1.2.1'
+implementation 'past3.smilecs.ketro:ketro:1.2.2'
 ```
 
 ## Ketro Request methods
