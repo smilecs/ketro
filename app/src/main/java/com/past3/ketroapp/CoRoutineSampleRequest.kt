@@ -1,6 +1,5 @@
-package com.past3.ketroapp
+package com.past3.ketro
 
-import com.past3.ketro.api.ApiErrorHandler
 import com.past3.ketro.api.Request
 import com.past3.ketro.model.Wrapper
 import retrofit2.Response
@@ -15,10 +14,6 @@ class CoRountineSampleRequest {
             override suspend fun makeRequest(): Response<ResponseModel> {
                 return gitHubAPI.searchUse("")
             }
-
-            //Override for custom error handling implementation
-            override var errorHandler: ApiErrorHandler = ApiErrorHandler()
-
         }
         return req.doRequest()
     }
