@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.past3.ketro"
+        applicationId "com.past3.ketroapp"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1

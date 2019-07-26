@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.past3.ketro">
+          package="com.past3.ketroapp">
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application

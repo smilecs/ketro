@@ -1,4 +1,4 @@
-package com.past3.ketro
+package com.past3.ketroapp
 
 import com.past3.ketro.api.ApiErrorHandler
 import com.past3.ketro.api.Request
