@@ -21,6 +21,7 @@ These methods are:
 
 - `doRequest() : LiveData<Wrapper<R>>`
 - `executeRequest(liveData:MutableLiveData<Wrapper<R>>)`
+- `suspend fun doRequest(): Wrapper<T>`
 
 ## Usage
 
@@ -61,7 +62,8 @@ fun getManufacturer() {
 
 ### Implementation with Coroutines helper
 
-Create your class holding your network requests or you can use one class per request:
+Create your class holding your network requests or you can use one class per request, the `doRequest():Wrapper<T>` suspention method from 
+the `Request` class is used to make the network call:
 
 ```kotlin
 class CoRountineSampleRequest {
@@ -86,7 +88,11 @@ class CoRountineSampleRequest {
 }
 ```
 
-Override the errorHandler class for adding extra/custom errorhandling exceptions
+Override the errorHandler class for adding extra/custom errorhandling exceptions.
+
+##### Note:
+The `doRequest` method returns a `Wrapper` with the response encapsulated within it and also returns the error/error code and custom exceptions
+as you may have defined.
 
 ```kotlin
 private val viewModelJob = SupervisorJob()
