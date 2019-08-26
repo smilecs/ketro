@@ -1,6 +1,7 @@
-package com.past3.ketro.model
+package com.past3.ketro.kcore.model
 
 import okhttp3.ResponseBody
+
 
 open class Kexception(val errorBody: ResponseBody?,
                       message: String?,

@@ -1,0 +1,5 @@
+ext {
+    //dependency injection
+    daggerVersion = '2.23.2'
+    javaxInjectVersion = '1'
+}

@@ -1,8 +1,8 @@
 package com.past3.ketro.api
 
 import android.arch.lifecycle.Observer
-import com.past3.ketro.model.StatusCode
-import com.past3.ketro.model.Wrapper
+import com.past3.ketro.kcore.model.StatusCode
+import com.past3.ketro.kcore.model.Wrapper
 
 /**
  *  @constructor Kobserver takes in a function to handle exceptions, note when

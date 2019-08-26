@@ -1,4 +1,4 @@
-package com.past3.ketro.model
+package com.past3.ketro.kcore.model
 
 /**
  *    Wrapper for Api responses

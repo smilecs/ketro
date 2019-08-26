@@ -6,10 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
-import com.past3.ketro.api.Kobserver
 import kotlinx.android.synthetic.main.main_activity.*
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+/*class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
@@ -89,3 +88,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 }
+*/

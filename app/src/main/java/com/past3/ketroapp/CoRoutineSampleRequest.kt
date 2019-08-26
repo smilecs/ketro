@@ -1,10 +1,8 @@
 package com.past3.ketroapp
 
-import com.past3.ketro.api.Request
-import com.past3.ketro.model.Wrapper
 import retrofit2.Response
 
-class CoRountineSampleRequest {
+/*class CoRountineSampleRequest {
     private val gitHubAPI: GitHubAPI by lazy {
         NetworkModule.createRetrofit().create(GitHubAPI::class.java)
     }
@@ -19,3 +17,5 @@ class CoRountineSampleRequest {
     }
 
 }
+
+*/
