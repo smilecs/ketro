@@ -1,8 +1,9 @@
-package com.past3.ketroapp
+package com.past3.ketro.data.repository
 
+import com.past3.ketro.api.ApiErrorHandler
 import retrofit2.Response
 
-/*class GitHubErrorHandler : ApiErrorHandler() {
+class GitHubErrorHandler : ApiErrorHandler() {
 
     override fun getExceptionType(response: Response<*>): Exception {
         return when (response.code()) {
@@ -24,4 +25,5 @@ import retrofit2.Response
             override val message = "Error from GitHub"
         }
     }
-}*/
+
+}

@@ -6,7 +6,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "javax.inject:javax.inject:$javaxInjectVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
-    api 'past3.smilecs.kcore:kcore:1.3'
+    implementation 'past3.smilecs.kcore:kcore:1.2'
 
 }
 

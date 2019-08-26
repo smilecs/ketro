@@ -21,14 +21,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "javax.inject:javax.inject:$javaxInjectVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.code.gson:gson:$gsonConverter"
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$gson"
-    implementation "com.squareup.okhttp3:okhttp:$okhttp"
-    implementation "com.squareup.okio:okio:$okio"
-    implementation "com.squareup.okhttp3:logging-interceptor:$interceptor"
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     implementation project(path: ':domain')
-    api project(path: ':ketro')
+    implementation project(path: ':ketro')
 }
 
 sourceCompatibility = "7"

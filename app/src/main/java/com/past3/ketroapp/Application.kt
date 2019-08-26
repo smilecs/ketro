@@ -1,6 +1,5 @@
 package com.past3.ketroapp
 
-
 import com.past3.ketroapp.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication

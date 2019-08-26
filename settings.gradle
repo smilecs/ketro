@@ -1,1 +1,1 @@
-include ':app', ':ketro', ':data', ':domain', ':kcore', ':presentation'
+include ':app', ':ketro', ':data', ':domain', ':kcore'
