@@ -38,7 +38,6 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
 
         viewModel._liveData.observe(this, object : Kobserver<Items>() {
             override fun onSuccess(data: Items) {
-                toggleViews(true)
                 Toast.makeText(this@MainActivity, "Works", Toast.LENGTH_LONG).show()
             }
 
@@ -50,7 +49,6 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     }
 
     private fun userErrorHanlder(ex: Exception) {
-        toggleViews(false)
         when (ex) {
             is ErrorConfig.NetworkException -> {
                 Toast.makeText(this@MainActivity, ex.message, Toast.LENGTH_LONG).show()
