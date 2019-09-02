@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/kcore" />
             <option value="$PROJECT_DIR$/ketro" />
+            <option value="$PROJECT_DIR$/presentation" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
