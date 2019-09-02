@@ -1,4 +1,4 @@
-package com.past3.ketro.data.di
+package com.past3.ketroapp.di
 
 import com.past3.ketro.data.repository.UserRepositoryimpl
 import com.past3.ketro.domain.repository.UserRepository

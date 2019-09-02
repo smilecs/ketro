@@ -1,6 +1,6 @@
-package com.past3.ketro.data.di
+package com.past3.ketroapp.di
 
-import com.past3.ketro.data.repository.GitHubAPI
+import com.past3.ketro.data.repository.datasource.GitHubAPI
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

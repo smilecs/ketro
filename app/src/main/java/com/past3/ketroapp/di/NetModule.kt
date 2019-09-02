@@ -1,4 +1,4 @@
-package com.past3.ketro.data.di
+package com.past3.ketroapp.di
 
 import dagger.Module
 import dagger.Provides
@@ -30,26 +30,21 @@ class NetModule {
         return client.build()
     }
 
+
     @Provides
     @Singleton
-    fun createRetrofit(okHttpClient: OkHttpClient, converterFactory: Converter.Factory): Retrofit {
+    fun createRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .addConverterFactory(converterFactory)
+                .addConverterFactory(object : Converter.Factory() {
+                    override fun responseBodyConverter(type: Type?, annotations: Array<Annotation>?, retrofit: Retrofit?): Converter<ResponseBody, Any>? {
+                        val delegate = retrofit!!.nextResponseBodyConverter<Any>(this, type!!, annotations!!)
+                        return Converter { body -> if (body.contentLength() == 0L) null else delegate.convert(body) }
+                    }
+                })
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
                 .build()
-    }
-
-    @Provides
-    @Singleton
-    fun NullOnEmptyConverterFactory(): Converter.Factory {
-        return object : Converter.Factory() {
-            override fun responseBodyConverter(type: Type?, annotations: Array<Annotation>?, retrofit: Retrofit?): Converter<ResponseBody, Any>? {
-                val delegate = retrofit!!.nextResponseBodyConverter<Any>(this, type!!, annotations!!)
-                return Converter { body -> if (body.contentLength() == 0L) null else delegate.convert(body) }
-            }
-        }
     }
 
 }

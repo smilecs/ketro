@@ -1,4 +1,4 @@
-package com.past3.ketro.data.repository
+package com.past3.ketro.data.repository.datasource
 
 import com.past3.ketro.api.ApiErrorHandler
 import com.past3.ketro.api.Request
