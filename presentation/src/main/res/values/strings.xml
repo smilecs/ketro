@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Ketro</string>
+    <string name="webservice_unavailable">Oops! Paylater service cannot be reached. Check your internet connection and try again.</string>
+    <string name="webservice_internet_unavailable">No internet connection…\nPlease check the settings</string>
+    <string name="webservice_unknown_result">Failed to obtain proper response</string>
+</resources>
