@@ -11,8 +11,27 @@ so errors can easily be grouped and managed with adequate actions and feedback t
 Currently Ketro is hosted on Jcenter, just add the below line to your app gradle file
 
 ```groovy
-implementation 'past3.smilecs.ketro:ketro:1.2.2'
+implementation 'past3.smilecs.ketro:ketro:1.2.4'
 ```
+## Multi - module projects:
+Ketro now supports multi-module projects, the Ketro modules such as Wrapper and ApiErrorHandler have been put into a separate package
+to allow you expose these in a domain layer without including the Ketro dependency so as to enable separation of concerns between the
+data, presentation and domain layer.
+ 
+```groovy
+implementation 'past3.smilecs.kcore:kcore:1.3'
+```
+or 
+
+```groovy
+api 'past3.smilecs.kcore:kcore:1.3'
+```
+If you need to expose the models via your domain or any other layer.
+
+- Note: The Kcore models are still accessible via the Ketro project, this other implementation is just 
+for those who want a simpler way to segrate their modules without having to include Ketro in every part of their
+project were only the models are needed.
+
 
 ## Ketro Request methods
 
