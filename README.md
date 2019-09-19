@@ -29,7 +29,7 @@ api 'past3.smilecs.kcore:kcore:1.3'
 If you need to expose the models via your domain or any other layer.
 
 - Note: The Kcore models are still accessible via the Ketro project, this other implementation is just 
-for those who want a simpler way to segrate their modules without having to include Ketro in every part of their
+for those who want a simpler way to separate their modules without having to include Ketro in every part of their
 project were only the models are needed.
 
 
