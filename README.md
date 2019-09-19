@@ -90,24 +90,18 @@ class CoRountineSampleRequest {
         NetworkModule.createRetrofit().create(GitHubAPI::class.java)
     }
 
-    suspend fun requestGithubUser(): Wrapper<ResponseModel> {
-        val req = object : Request<ResponseModel>() {
-            override suspend fun makeRequest(): Response<ResponseModel> {
-                return gitHubAPI.searchUse("")
+     suspend fun requestGithubUser(user: String): Wrapper<ResponseItems> {
+            val req = object : Request<ResponseItems>(GitHubErrorHandler()) {
+                override suspend fun apiRequest(): Response<ResponseItems> =
+                        gitHubAPI.searchUse(user)
             }
-
-       //Override for custom error handling implementation
-        override var errorHandler: ApiErrorHandler = ApiErrorHandler()
-
-
+            return req.doRequest()
         }
-        return req.doRequest()
-    }
 
 }
 ```
 
-Override the errorHandler class for adding extra/custom errorhandling exceptions.
+Override the errorHandler class for adding extra/custom ErrorHandling exceptions.
 
 ##### Note:
 The `doRequest` method returns a `Wrapper` with the response encapsulated within it and also returns the error/error code and custom exceptions
@@ -117,13 +111,14 @@ as you may have defined.
 private val viewModelJob = SupervisorJob()
 
 //Scope coroutine to a viewmodel or use global scope
-private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+private val scope = CoroutineScope(Dispatchers.Default + viewModelJob)
 
 fun getGitHubUser() {
-    uiScope.launch {
-        val wrapper = CoRountineSampleRequest().requestGithubUser()
-        //SetValue to livedata or use the returning value for computations if not required to return to the view
-        liveData.value = wrapper
+     scope.launch {
+         val user = getUserUseCase(name)
+          withContext(Dispatchers.Main) {
+          liveData.value = user
+           }
         }
     }
 ```
@@ -152,12 +147,19 @@ viewModel._liveData.observe(this, object : Kobserver<ResponseModel>() {
     }
 ```
 
-As noted above the Request class `doRequest()` executes the api call and returns an observable live data object. Now Ketro offers an extension of the Android Observer class(Kobserver), which attempts to handle api errors/exceptions delegated by the user, hence why we have an exception and a success callback.
+As noted above the Request class `doRequest()` executes the api call and depending on usage it could either 
+return an observable live data object or a data wrapper of type `Wrapper<T>` were `T` represents your object, within this wrapper class
+you have access to your data or exceptions as well as Status code. 
+Now Ketro offers an extension of the Android Observer class(`Kobserver<T>`), which attempts to handle api errors/exceptions delegated by the user, 
+hence why we have an exception and a success callback.
 
 - Note Using the Kobserver with the returned api response is optional, but recommended for proper error handling.
 
 There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios,
-instead of calling `doRequest()`, we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)`. This method needs the specified response type to be wrapped with the `Wrapper` class in Ketro so it can propagate errors effectively. Internally all the methods wrap each object with the Ketro Wrapper.
+instead of calling `doRequest()`, we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)` or use the Coroutines helper
+as described above. 
+This method needs the specified response type to be wrapped with the `Wrapper` class in Ketro so it can propagate errors effectively. 
+Internally all the methods wrap each object with the Ketro Wrapper.
 
 ```kotlin
 val wrap = MutableLiveData<Wrapper<VehicleContainer>>()
@@ -226,7 +228,7 @@ class LobbyRequest(private val page: Int) : GenericRequestHandler<VehicleContain
 }
 ```
 
-After creating your class and modifiying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
+After creating your class and modifying your request handler you can go ahead to check for the exception in your View(Activity/Fragment)
 Here you can Also check if the exception is of type Kexception and use the errorBody included within the object.
 Note: the onException override is now optional, and as well you can pass in a function into the kobserver
 constructor to handle your errors and as well get a cleaner interface
@@ -262,7 +264,8 @@ viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>
 ### Alternatively
 
 Passing in a error handling function will allow you to omit the `onException` callback which is
-now optional, note that passing in a function will stop the `onException` callback from executing
+now optional.
+##### Note: that passing in a function will stop the `onException` callback from executing
 so it's a choice between using either one.
 
 ```kotlin
@@ -289,3 +292,4 @@ private fun userErrorHanlder(ex: Exception) {
 ```
 
 ### Also for any request or anything unclear with the library feel free to hit me up, on mumene@gmail.com or create an issue ticket.
+
