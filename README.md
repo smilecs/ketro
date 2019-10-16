@@ -17,6 +17,10 @@ implementation 'past3.smilecs.ketro:ketro:1.2.4'
 Ketro now supports multi-module projects, the Ketro modules such as Wrapper and ApiErrorHandler have been put into a separate package
 to allow you expose these in a domain layer without including the Ketro dependency so as to enable separation of concerns between the
 data, presentation and domain layer.
+
+```groovy
+implementation 'past3.smilecs.ketro:ketro:1.3'
+```
  
 ```groovy
 implementation 'past3.smilecs.kcore:kcore:1.3'
@@ -24,9 +28,20 @@ implementation 'past3.smilecs.kcore:kcore:1.3'
 or 
 
 ```groovy
+api 'past3.smilecs.ketro:ketro:1.3'
+```
+
+```groovy
 api 'past3.smilecs.kcore:kcore:1.3'
 ```
-If you need to expose the models via your domain or any other layer.
+
+#### Note:
+`Kcore` Houses the ketro models, it's seperation is just so you don't need to include, the `ketro` 
+dependency in your `domain` module, if you choose to keep your domain layer as a clean kotlin project
+with no android dependency else, you can just use the `ketro 1.3` dependency in all your modules.
+
+Please check sample if any confusion on how these layers interact and how the dependency between kcore and ketro work
+. As a side, the actual handling logic is in `ketro` and `kcore` is a dependency in `ketro`.
 
 - Note: The Kcore models are still accessible via the Ketro project, this other implementation is just 
 for those who want a simpler way to separate their modules without having to include Ketro in every part of their
