@@ -35,6 +35,19 @@ api 'past3.smilecs.ketro:ketro:1.3'
 api 'past3.smilecs.kcore:kcore:1.3'
 ```
 
+Add the sample below to your top level `build.gradle` file when including the `kcore` dependency
+
+```groovy
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            url "https://dl.bintray.com/smilecs/ketro"
+        }
+    }
+}
+```
+
 #### Note:
 `Kcore` Houses the ketro models, it's seperation is just so you don't need to include, the `ketro` 
 dependency in your `domain` module, if you choose to keep your domain layer as a clean kotlin project
