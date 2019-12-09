@@ -7,6 +7,7 @@ import com.past3.ketro.domain.GetUserUseCase
 import com.past3.ketro.domain.entities.Items
 import com.past3.ketro.kcore.model.Wrapper
 import kotlinx.coroutines.*
+import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -25,10 +26,23 @@ class MainViewModel @Inject constructor(
             + viewModelJob)
 
     fun searchUser(name: String) {
-        scope.launch {
+        scope.launch(handler()) {
             val user = getUserUseCase(name)
             withContext(Dispatchers.Main) {
                 liveData.value = user
+            }
+        }
+    }
+
+    private fun handler(action: (() -> Any)? = null): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            when (throwable) {
+                is IOException -> {
+                    action?.invoke()
+                }
+                else -> {
+                    throwable.printStackTrace()
+                }
             }
         }
     }
