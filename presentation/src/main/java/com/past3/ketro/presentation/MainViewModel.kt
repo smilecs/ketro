@@ -52,6 +52,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun handler(action: (() -> Any)? = null): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            when (throwable) {
+                is IOException -> {
+                    action?.invoke()
+                }
+                else -> {
+                    throwable.printStackTrace()
+                }
+            }
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()
