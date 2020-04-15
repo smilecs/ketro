@@ -3,10 +3,11 @@ package com.past3.ketro.presentation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.past3.ketro.api.LiveDataHandler
 import com.past3.ketro.domain.GetUserUseCase
 import com.past3.ketro.domain.entities.Items
-import com.past3.ketro.kcore.model.Wrapper
 import kotlinx.coroutines.*
+import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -15,9 +16,14 @@ class MainViewModel @Inject constructor(
 
     val list = mutableListOf<Items>()
 
-    private val liveData = MutableLiveData<Wrapper<Items>>()
+    private val _errorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val errorLiveData: LiveData<Exception> = _errorLiveData
 
-    val _liveData: LiveData<Wrapper<Items>> = liveData
+    private val liveDataHandler = LiveDataHandler(_errorLiveData)
+
+    private val liveData = MutableLiveData<Items>()
+
+    val _liveData: LiveData<Items> = liveData
 
     private val viewModelJob = SupervisorJob()
 
@@ -25,10 +31,23 @@ class MainViewModel @Inject constructor(
             + viewModelJob)
 
     fun searchUser(name: String) {
-        scope.launch {
+        scope.launch(handler()) {
             val user = getUserUseCase(name)
             withContext(Dispatchers.Main) {
-                liveData.value = user
+                liveDataHandler.emit(user, liveData)
+            }
+        }
+    }
+
+    private fun handler(action: (() -> Any)? = null): CoroutineExceptionHandler {
+        return CoroutineExceptionHandler { _, throwable ->
+            when (throwable) {
+                is IOException -> {
+                    action?.invoke()
+                }
+                else -> {
+                    throwable.printStackTrace()
+                }
             }
         }
     }

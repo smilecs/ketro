@@ -16,21 +16,14 @@ abstract class Kobserver<T>(private val exceptionHandler: ((Exception) -> Unit)?
             finish(it.statusCode)
             it.exception?.let { ex ->
                 handleErrorInstance(ex)
-            }
-            it.data?.let { data ->
+            } ?: it.data?.let { data ->
                 onSuccess(data)
             }
-            return
-        }
-        handleErrorInstance(Exception("Something went wrong"))
+        } ?: handleErrorInstance(Exception("Something went wrong"))
     }
 
     private fun handleErrorInstance(ex: Exception) {
-        exceptionHandler?.let { func ->
-            func.invoke(ex)
-            return
-        }
-        onException(ex)
+        exceptionHandler?.invoke(ex) ?: onException(ex)
     }
 
     /**

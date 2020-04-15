@@ -10,7 +10,7 @@ package com.past3.ketro.kcore.model
 class Wrapper<T>(
         val exception: Exception? = null,
         val data: T? = null,
-        val statusCode: StatusCode
+        val statusCode: StatusCode = StatusCode(-1)
 )
 
 inline class StatusCode(val code: Int)
