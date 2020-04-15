@@ -20,7 +20,7 @@ ext {
     libraryDescription = 'Retrofit response wrapper written in Kotlin used to easily wrap REST API response to LiveData and also propagate errors to the calling component'
     gitUrl = 'https://github.com/smilecs/ketro.git'
     configurations = ['archives']
-    libraryVersion = '1.3.2'
+    libraryVersion = '1.3.4'
 }
 
 dependencies {

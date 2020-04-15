@@ -1,5 +1,6 @@
 package com.past3.ketro.api
 
+import com.past3.ketro.kcore.model.KResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +21,15 @@ class RequestUnitTest {
         runBlocking {
             val data = request.doRequest()
             assert((data.statusCode.code in 200..209))
+        }
+    }
+
+    @Test
+    fun `execute should return 200`() {
+        runBlocking {
+            val data = request.execute()
+            assert((data.statusCode.code in 200..209))
+            assert(data is KResponse.Success<*>)
         }
     }
 

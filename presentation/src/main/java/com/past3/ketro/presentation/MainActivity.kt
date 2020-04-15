@@ -1,5 +1,6 @@
 package com.past3.ketro.presentation
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -36,14 +37,14 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         listAdapter.submitList(viewModel.list)
         searchButton.setOnClickListener(this@MainActivity)
 
-        viewModel._liveData.observe(this, object : Kobserver<Items>() {
-            override fun onSuccess(data: Items) {
-                toggleViews(true)
-                Toast.makeText(this@MainActivity, "Works", Toast.LENGTH_LONG).show()
-            }
+        viewModel._liveData.observe(this, Observer {
+            toggleViews(true)
+            Toast.makeText(this@MainActivity, "Works", Toast.LENGTH_LONG).show()
+        })
 
-            override fun onException(exception: Exception) {
-                userErrorHanlder(exception)
+        viewModel.errorLiveData.observe(this, Observer { ex ->
+            ex?.let {
+                userErrorHanlder(it)
             }
         })
 
