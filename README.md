@@ -28,11 +28,11 @@ implementation 'past3.smilecs.kcore:kcore:1.3.1'
 or 
 
 ```groovy
-api 'past3.smilecs.ketro:ketro:1.3'
+api 'past3.smilecs.ketro:ketro:1.3.2'
 ```
 
 ```groovy
-api 'past3.smilecs.kcore:kcore:1.3.1'
+api 'past3.smilecs.kcore:kcore:1.3.5'
 ```
 
 Add the sample below to your top level `build.gradle` file when including the `kcore` dependency
@@ -51,7 +51,7 @@ allprojects {
 #### Note:
 `Kcore` Houses the ketro models, it's seperation is just so you don't need to include, the `ketro` 
 dependency in your `domain` module, if you choose to keep your domain layer as a clean kotlin project
-with no android dependency else, you can just use the `ketro 1.3` dependency in all your modules.
+with no android dependency else, you can just use the `ketro 1.3.x` dependency in all your modules.
 
 Please check sample if any confusion on how these layers interact and how the dependency between kcore and ketro work
 . As a side, the actual handling logic is in `ketro` and `kcore` is a dependency in `ketro`.
@@ -69,10 +69,17 @@ These methods are:
 - `doRequest() : LiveData<Wrapper<R>>`
 - `executeRequest(liveData:MutableLiveData<Wrapper<R>>)`
 - `suspend fun doRequest(): Wrapper<T>`
+- `suspend fun execute(): KResponse<T>`
 
 ## Usage
 
-Inorder to use these wrappers for your request, you must extend the ketro `GenericRequestHandler<T>` which takes in a class type which you would like to observe with livedata.
+Inorder to use these wrappers for your request, you must extend the ketro `GenericRequestHandler<T>`  which takes in a class type which you would like to observe with livedata.
+Ketro offers two request patterns:
+
+1. `GenericRequestHandler<T>`
+2. `Request<T>`
+
+### 1. GenericRequestHandler API
 
 ```kotlin
 class LobbyRequest(private val mainType: String = "") : GenericRequestHandler<VehicleContainer>() {
@@ -104,50 +111,6 @@ fun getManufacturer() {
 
             }
         })
-    }
-```
-
-### Implementation with Coroutines helper
-
-Create your class holding your network requests or you can use one class per request, the `doRequest():Wrapper<T>` suspention method from 
-the `Request` class is used to make the network call:
-
-```kotlin
-class CoRountineSampleRequest {
-    private val gitHubAPI: GitHubAPI by lazy {
-        NetworkModule.createRetrofit().create(GitHubAPI::class.java)
-    }
-
-     suspend fun requestGithubUser(user: String): Wrapper<ResponseItems> {
-            val req = object : Request<ResponseItems>(GitHubErrorHandler()) {
-                override suspend fun apiRequest(): Response<ResponseItems> =
-                        gitHubAPI.searchUse(user)
-            }
-            return req.doRequest()
-        }
-
-}
-```
-
-Override the errorHandler class for adding extra/custom ErrorHandling exceptions.
-
-##### Note:
-The `doRequest` method returns a `Wrapper` with the response encapsulated within it and also returns the error/error code and custom exceptions
-as you may have defined.
-
-```kotlin
-private val viewModelJob = SupervisorJob()
-
-//Scope coroutine to a viewmodel or use global scope
-private val scope = CoroutineScope(Dispatchers.Default + viewModelJob)
-
-fun getGitHubUser() {
-     scope.launch {
-         val user = getUserUseCase(name)
-          withContext(Dispatchers.Main) {
-          liveData.value = user
-           }
-        }
     }
 ```
 
@@ -183,9 +146,9 @@ hence why we have an exception and a success callback.
 
 - Note Using the Kobserver with the returned api response is optional, but recommended for proper error handling.
 
-There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In these kind of scenarios,
+There are situations where you may want to have a separate request method and a separate LiveData object update when the request resolves. In such scenarios,
 instead of calling `doRequest()`, we would call `executeRequest(liveData: MutableLiveData<Wrapper<R>>)` or use the Coroutines helper
-as described above. 
+as described in the next section. 
 This method needs the specified response type to be wrapped with the `Wrapper` class in Ketro so it can propagate errors effectively. 
 Internally all the methods wrap each object with the Ketro Wrapper.
 
@@ -196,7 +159,123 @@ fun getManufacturer() {
 }
 ```
 
-After the request is resolved, the `LiveData` object passed in, has it's value set with the response and all active observers of the `LiveData` are triggered.
+After the request is resolved, the `LiveData` object passed in will have its value set with the response and all active observers of the `LiveData` are triggered.
+
+### 2. Request API Implementation with Coroutines helper
+
+This sections shows examples on how to use the `Request API`, the samples provided will come in pairs, one would be for 
+responses using the `execute -> KResponse<T>` and the other would be for `doRequest -> Wrapper<T>`.
+
+##### Note: The request api uses Coroutine Suspend functions. 
+
+Create your class holding your network requests or you can use one class per request, the `doRequest():Wrapper<T>` suspention method from 
+the `Request` class is used to make the network call:
+
+```kotlin
+class CoRoutineSampleRequest {
+    private val gitHubAPI: GitHubAPI by lazy {
+        NetworkModule.createRetrofit().create(GitHubAPI::class.java)
+    }
+
+     suspend fun requestGithubUser(user: String): Wrapper<ResponseItems> {
+            val req = object : Request<ResponseItems>(GitHubErrorHandler()) {
+                override suspend fun apiRequest(): Response<ResponseItems> =
+                        gitHubAPI.searchUse(user)
+            }
+            return req.doRequest()
+        }
+
+}
+```
+
+Example using `Request API`
+```kotlin
+class GetUserDataSourceRemote @Inject constructor(private val gitHubAPI: GitHubAPI) {
+
+    suspend fun requestGithubUser(user: String): KResponse<ResponseItems> {
+        val req = object : Request<ResponseItems>(GitHubErrorHandler()) {
+            override suspend fun apiRequest(): Response<ResponseItems> =
+                    gitHubAPI.searchUse(user)
+        }
+        return req.execute()
+    }
+
+}
+```
+
+Override the errorHandler class for adding extra/custom ErrorHandling exceptions details in next section Error Handling.
+
+##### Note:
+The `doRequest` method returns a `Wrapper` with the response encapsulated within it and returns the error/error code and custom exceptions
+as you may have defined.
+
+```kotlin
+private val viewModelJob = SupervisorJob()
+
+//Scope coroutine to a ViewModel or use global scope
+private val scope = CoroutineScope(Dispatchers.Default + viewModelJob)
+
+fun getGitHubUser() {
+     scope.launch {
+         val user = getUserUseCase(name)
+          withContext(Dispatchers.Main) {
+          liveData.value = user
+           }
+        }
+    }
+```
+
+```kotlin
+private val _errorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val errorLiveData: LiveData<Exception> = _errorLiveData
+
+    private val liveDataHandler = LiveDataHandler(_errorLiveData)
+
+    private val liveData = MutableLiveData<Items>()
+
+    val _liveData: LiveData<Items> = liveData
+
+    private val viewModelJob = SupervisorJob()
+
+    private val scope = CoroutineScope(Dispatchers.Default
+            + viewModelJob)
+
+    fun searchUser(name: String) {
+        scope.launch(handler()) {
+            val user = getUserUseCase(name)
+            withContext(Dispatchers.Main) {
+                liveDataHandler.emit(user, liveData)
+            }
+        }
+    }
+```
+Above is an example of handling data response of type KResponse in the ViewModel and emitting either a failure or the success `T`
+The `LiveDataHandler` is a function within ketro that parses the KResponse return object and can emit either the success or failure object.
+
+```kotlin
+private val _errorLiveData: MutableLiveData<Exception> = MutableLiveData()
+    val errorLiveData: LiveData<Exception> = _errorLiveData
+
+    private val liveDataHandler = LiveDataHandler(_errorLiveData)
+```
+To use the LiveDataHandler initialise it with a LiveData that takes in an exception i.e `LiveData<Exception>` this
+is because the KResponse wraps errors in exceptions that can be predefined by the user Using the `ApiErrorHandler` which allows you to OverRide and add your own error
+definitions. Then on the view you can collect your LiveData values as normal because if success the `LiveDataHandler` will
+emit the success value to the specific `LiveData`.
+
+```kotlin
+   viewModel._liveData.observe(this, Observer {
+            toggleViews(true)
+            Toast.makeText(this@MainActivity, "Works", Toast.LENGTH_LONG).show()
+        })
+
+        viewModel.errorLiveData.observe(this, Observer { ex ->
+            ex?.let {
+                userErrorHanlder(it)
+            }
+        })
+```
+
 
 ## Error Handling
 
@@ -291,8 +370,8 @@ viewModel.responseData().observe(this, object : Kobserver<List<VehicleContainer>
 
 ### Alternatively
 
-Passing in a error handling function will allow you to omit the `onException` callback which is
-now optional.
+Passing in an error handling function will allow you to omit the `onException` callback which is
+now optional when using the `Kobserver`.
 ##### Note: that passing in a function will stop the `onException` callback from executing
 so it's a choice between using either one.
 
