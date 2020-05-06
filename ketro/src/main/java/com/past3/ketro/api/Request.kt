@@ -6,13 +6,13 @@ import com.past3.ketro.kcore.model.StatusCode
 import com.past3.ketro.kcore.model.Wrapper
 import retrofit2.Response
 
-abstract class Request<T>(
+abstract class Request<out T : Any>(
         private val errorHandler: ApiErrorHandler = ApiErrorHandler()
 ) {
 
-    abstract suspend fun apiRequest(): Response<T>
+    abstract suspend fun apiRequest(): Response<out T>
 
-    open suspend fun doRequest(): Wrapper<T> {
+    open suspend fun doRequest(): Wrapper<out T> {
         val resp = apiRequest()
         val statusCode = StatusCode(resp.code())
         return when (resp.code()) {
@@ -39,12 +39,12 @@ abstract class Request<T>(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun handleResponseData(data: T?, statusCode: StatusCode): Wrapper<T> {
+    fun <T>handleResponseData(data: T?, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(data = data, statusCode = statusCode)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun handleError(response: Response<T>, statusCode: StatusCode): Wrapper<T> {
+    fun <T>handleError(response: Response<T>, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(errorHandler.getExceptionType(response), statusCode = statusCode)
     }
 
