@@ -10,7 +10,7 @@ class LiveDataHandler(private val liveData: MutableLiveData<Exception>) {
             is KResponse.Success<T> -> {
                 mutableLiveData.value = kResponse.data
             }
-            is KResponse.Failure<T> -> {
+            is KResponse.Failure -> {
                 liveData.value = kResponse.exception
             }
         }
@@ -21,7 +21,7 @@ class LiveDataHandler(private val liveData: MutableLiveData<Exception>) {
             is KResponse.Success<T> -> {
                 action(kResponse.data)
             }
-            is KResponse.Failure<T> -> {
+            is KResponse.Failure -> {
                 liveData.value = kResponse.exception
             }
         }
