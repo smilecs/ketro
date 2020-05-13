@@ -19,20 +19,20 @@ to allow you expose these in a domain layer without including the Ketro dependen
 data, presentation and domain layer.
 
 ```groovy
-implementation 'past3.smilecs.ketro:ketro:1.3'
+implementation 'past3.smilecs.ketro:ketro:1.3.3'
 ```
  
 ```groovy
-implementation 'past3.smilecs.kcore:kcore:1.3.1'
+implementation 'past3.smilecs.kcore:kcore:1.3.6'
 ```
 or 
 
 ```groovy
-api 'past3.smilecs.ketro:ketro:1.3.2'
+api 'past3.smilecs.ketro:ketro:1.3.3'
 ```
 
 ```groovy
-api 'past3.smilecs.kcore:kcore:1.3.5'
+api 'past3.smilecs.kcore:kcore:1.3.6'
 ```
 
 Add the sample below to your top level `build.gradle` file when including the `kcore` dependency
