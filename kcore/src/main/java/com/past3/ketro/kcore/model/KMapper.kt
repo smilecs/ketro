@@ -1,6 +1,6 @@
 package com.past3.ketro.kcore.model
 
-abstract class KMapper<in E, T> {
+abstract class KMapper<in E, out T> {
     abstract fun mapFrom(from: E): T
 }
 
