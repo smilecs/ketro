@@ -26,7 +26,7 @@ abstract class Request<out T : Any>(
     }
 
     open suspend fun execute(): KResponse<T> {
-        val resp = apiRequest()
+        val resp: Response<out T> = apiRequest()
         val statusCode = StatusCode(resp.code())
         return when (resp.code()) {
             in 200 until 209 -> {
@@ -39,12 +39,12 @@ abstract class Request<out T : Any>(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun <T>handleResponseData(data: T?, statusCode: StatusCode): Wrapper<out T> {
+    fun <T> handleResponseData(data: T?, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(data = data, statusCode = statusCode)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun <T>handleError(response: Response<T>, statusCode: StatusCode): Wrapper<out T> {
+    fun <T> handleError(response: Response<T>, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(errorHandler.getExceptionType(response), statusCode = statusCode)
     }
 
