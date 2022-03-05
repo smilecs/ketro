@@ -1,6 +1,6 @@
 package com.past3.ketro.api
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.past3.ketro.kcore.model.KResponse
 
 class LiveDataHandler(private val liveData: MutableLiveData<Exception>) {

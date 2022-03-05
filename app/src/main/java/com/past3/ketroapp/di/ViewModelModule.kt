@@ -1,7 +1,7 @@
 package com.past3.ketroapp.di
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.past3.ketro.presentation.MainViewModel
 import dagger.Binds
 import dagger.Module

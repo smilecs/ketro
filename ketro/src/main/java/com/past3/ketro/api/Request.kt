@@ -1,6 +1,6 @@
 package com.past3.ketro.api
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.past3.ketro.kcore.model.KResponse
 import com.past3.ketro.kcore.model.StatusCode
 import com.past3.ketro.kcore.model.Wrapper

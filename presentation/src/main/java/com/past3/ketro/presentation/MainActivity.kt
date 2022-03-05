@@ -1,15 +1,12 @@
 package com.past3.ketro.presentation
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
-import com.past3.ketro.api.Kobserver
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.past3.ketro.domain.entities.ErrorConfig
-import com.past3.ketro.domain.entities.Items
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.main_activity.*
 import javax.inject.Inject
@@ -27,7 +24,7 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         recyclerView.let {
             it.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             it.adapter = listAdapter
@@ -70,7 +67,7 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         viewModel.searchUser(editText.text.toString())
     }
 
-    fun toggleViews(dataAvailable: Boolean) {
+    private fun toggleViews(dataAvailable: Boolean) {
         progressBar.visibility = View.GONE
         if (dataAvailable) {
             errorView.visibility = View.GONE
@@ -80,5 +77,4 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
             errorView.visibility = View.VISIBLE
         }
     }
-
 }

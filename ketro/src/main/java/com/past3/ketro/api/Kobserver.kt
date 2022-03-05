@@ -1,6 +1,6 @@
 package com.past3.ketro.api
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import com.past3.ketro.kcore.model.StatusCode
 import com.past3.ketro.kcore.model.Wrapper
 
