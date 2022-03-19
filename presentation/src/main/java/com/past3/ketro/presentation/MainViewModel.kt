@@ -1,8 +1,9 @@
 package com.past3.ketro.presentation
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.past3.ketro.api.LiveDataHandler
 import com.past3.ketro.domain.GetUserUseCase
 import com.past3.ketro.domain.entities.Items
@@ -11,7 +12,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-        private val getUserUseCase: GetUserUseCase
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
     val list = mutableListOf<Items>()
@@ -27,8 +28,10 @@ class MainViewModel @Inject constructor(
 
     private val viewModelJob = SupervisorJob()
 
-    private val scope = CoroutineScope(Dispatchers.Default
-            + viewModelJob)
+    private val scope = CoroutineScope(
+        Dispatchers.Default
+                + viewModelJob
+    )
 
     fun searchUser(name: String) {
         scope.launch(handler()) {

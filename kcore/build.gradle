@@ -1,38 +1,13 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-ext {
-    bintrayRepo = 'ketro'
-    bintrayName = 'kcore'
-
-    publishedGroupId = 'past3.smilecs.kcore'
-    libraryName = 'Kcore'
-    artifact = 'kcore'
-    siteUrl = ''
-    licenseName = 'MIT'
-    developerId = 'smilecs'
-    developerEmail = 'mumene@gmail.com'
-    developerName = 'Smile Egbai'
-    allLicenses = ['MIT']
-    licenseUrl = 'https://opensource.org/licenses/MIT'
-    libraryDescription = 'Retrofit response wrapper written in Kotlin used to easily wrap REST API response to LiveData and also propagate errors to the calling component'
-    gitUrl = 'https://github.com/smilecs/ketro.git'
-    configurations = ['archives']
-    libraryVersion = '1.3.6'
-}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.squareup.okhttp3:okhttp:4.1.0'
 }
 repositories{
+    google()
     mavenCentral()
-}
-if(project.rootProject.file('local.properties').exists()){
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-    apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 }
 
 sourceCompatibility = "7"
