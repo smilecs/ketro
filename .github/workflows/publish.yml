@@ -1,4 +1,4 @@
-name: Publish Bintray
+name: Publish Package
 on:
   release:
     types: [published]
@@ -15,8 +15,7 @@ jobs:
         java-version: 1.8
     - name: Grant Permission to Execute
       run: chmod +x gradlew
+    - name: Build Library
+      run: ./gradlew ketro:assemble
     - name: Publish Library
-      env:
-        bintrayUser: ${{ secrets.BINTRAY_USER }}
-        bintrayApiKey: ${{ secrets.BINTRAY_API_KEY }}
-      run: ./gradlew ketro:bintrayUpload
+      run: ./gradlew ketro:publish
