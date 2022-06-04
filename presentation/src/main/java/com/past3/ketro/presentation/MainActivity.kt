@@ -26,7 +26,8 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.main_activity)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         recyclerView.let {
-            it.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            it.layoutManager =
+                LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
             it.adapter = listAdapter
             it.setHasFixedSize(true)
         }
@@ -56,7 +57,11 @@ class MainActivity : DaggerAppCompatActivity(), View.OnClickListener {
             is ErrorConfig.GitHubException -> {
                 Toast.makeText(this@MainActivity, ex.message, Toast.LENGTH_LONG).show()
             }
-            else -> Toast.makeText(this@MainActivity, "Oops! Something went wrong.", Toast.LENGTH_LONG).show()
+            else -> Toast.makeText(
+                this@MainActivity,
+                "Oops! Something went wrong.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
