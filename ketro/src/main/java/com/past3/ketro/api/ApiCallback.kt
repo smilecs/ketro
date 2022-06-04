@@ -24,14 +24,9 @@ abstract class ApiCallback<T>(private val errorHandler: ApiErrorHandler) : Callb
         handleException(errorHandler.getExceptionType(response), statusCode)
     }
 
-    protected abstract fun handleException(ex: Exception, statusCode: StatusCode)
+    protected abstract fun handleException(t: Throwable, statusCode: StatusCode)
 
     override fun onFailure(call: Call<T>, t: Throwable) {
-        if (t is Exception) {
-            handleException(t, StatusCode(-1))
-        } else {
-            //do something else
-        }
+        handleException(t, StatusCode(-1))
     }
-
 }
