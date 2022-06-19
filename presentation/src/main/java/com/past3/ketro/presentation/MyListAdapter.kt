@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.past3.ketro.domain.entities.Items
-import kotlinx.android.synthetic.main.list_item.view.*
 
 class MyListAdapter : ListAdapter<Items, MyListAdapter.MyViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -21,7 +20,7 @@ class MyListAdapter : ListAdapter<Items, MyListAdapter.MyViewHolder>(DiffCallbac
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(model: Items) {
-            itemView.textView.text = model.login
+           // itemView.textView.text = model.login
         }
     }
 
