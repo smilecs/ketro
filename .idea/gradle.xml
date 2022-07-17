@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/kcore" />
             <option value="$PROJECT_DIR$/ketro" />
+            <option value="$PROJECT_DIR$/request" />
           </set>
         </option>
       </GradleProjectSettings>
