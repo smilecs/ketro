@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class com.past3.ketro.api.Request
+-keep public class com.past3.ketro.api.ApiErrorHandler
+-keep public class com.past3.ketro.api.ApiCallback
+-keep public class com.past3.ketro.api.GenericRequestHandler
+-keep public class com.past3.ketro.api.Kobserver
+-keep public class com.past3.ketro.api.LiveDataHandler
+
