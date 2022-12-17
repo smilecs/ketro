@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 32
-        versionCode 3
-        versionName "1.2"
+        targetSdkVersion 33
+        versionCode 4
+        versionName "1.4"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -48,7 +48,6 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     api project(path: ':kcore')
-    api project(path: ':request')
 }
 repositories {
     google()
