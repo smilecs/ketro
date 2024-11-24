@@ -13,4 +13,5 @@ class Wrapper<T>(
         val statusCode: StatusCode = StatusCode(-1)
 )
 
-inline class StatusCode(val code: Int)
+@JvmInline
+value class StatusCode(val code: Int)
