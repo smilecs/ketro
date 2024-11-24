@@ -1,1 +1,1 @@
-include ':ketro', ':kcore'
+include ':ketro'

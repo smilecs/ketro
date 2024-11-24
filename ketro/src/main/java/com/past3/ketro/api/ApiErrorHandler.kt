@@ -1,7 +1,7 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.kcore.model.Kexception
-import com.past3.ketro.kcore.model.StatusCode
+import com.past3.ketro.api.model.KException
+import com.past3.ketro.api.model.StatusCode
 
 /*
 *ApiErrorHandler class should be extended to handle custom exceptions
@@ -15,7 +15,12 @@ open class ApiErrorHandler {
     *  return a sub-type of kexception()
     */
     open fun getExceptionType(response: retrofit2.Response<*>): Exception {
-        return Kexception(response.errorBody(), response.message(), null, StatusCode(response.code()))
+        return KException(
+            response.errorBody(),
+            response.message(),
+            null,
+            StatusCode(response.code())
+        )
     }
 
 

@@ -1,4 +1,4 @@
-package com.past3.ketro.kcore.model
+package com.past3.ketro.api.model
 
 sealed class KResponse<out T>(val statusCode: StatusCode) {
 
@@ -7,5 +7,4 @@ sealed class KResponse<out T>(val statusCode: StatusCode) {
 
     class Failure(val exception: Exception, statusCode: StatusCode = StatusCode(-1)) :
         KResponse<Nothing>(statusCode)
-
 }

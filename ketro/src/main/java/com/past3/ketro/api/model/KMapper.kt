@@ -1,4 +1,4 @@
-package com.past3.ketro.kcore.model
+package com.past3.ketro.api.model
 
 abstract class KMapper<in E, out T> {
     abstract fun mapFrom(from: E): T

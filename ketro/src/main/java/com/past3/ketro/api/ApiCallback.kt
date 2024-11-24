@@ -1,6 +1,6 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.kcore.model.StatusCode
+import com.past3.ketro.api.model.StatusCode
 import retrofit2.Call
 import retrofit2.Callback
 
@@ -12,6 +12,7 @@ abstract class ApiCallback<T>(private val errorHandler: ApiErrorHandler) : Callb
             in 200 until 209 -> {
                 handleResponseData(response.body(), statusCode)
             }
+
             else -> {
                 handleError(response, statusCode)
             }
