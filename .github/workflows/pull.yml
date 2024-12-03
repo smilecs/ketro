@@ -1,0 +1,50 @@
+name: Test on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - master # Specify the branches to run tests on PRs against
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up JDK for the Android project
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Cache Gradle dependencies to speed up builds
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Step 4: Build the project and run tests
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+      # Step 5: Run Android Instrumentation Tests (Optional)
+      # Uncomment the following block to run instrumentation tests
+      # - name: Run Instrumentation Tests
+      #   run: ./gradlew connectedAndroidTest
+      #   env:
+      #     ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
+
+      # Step 6: Upload Test Results (Optional)
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: app/build/reports/tests/testDebugUnitTest

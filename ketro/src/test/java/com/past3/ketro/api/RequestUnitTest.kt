@@ -1,6 +1,6 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.kcore.model.KResponse
+import com.past3.ketro.api.model.KResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
