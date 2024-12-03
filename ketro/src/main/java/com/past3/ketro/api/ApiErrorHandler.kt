@@ -8,8 +8,6 @@ import com.past3.ketro.api.model.StatusCode
 *
 **/
 open class ApiErrorHandler {
-
-
     /* Method should be overridden to return custom exception type which
     *  would be a sub-type of Exception or to have the response body,
     *  return a sub-type of kexception()
@@ -22,6 +20,4 @@ open class ApiErrorHandler {
             StatusCode(response.code())
         )
     }
-
-
 }

@@ -1,6 +1,5 @@
 package com.past3.ketro.api
 
-import androidx.annotation.VisibleForTesting
 import com.past3.ketro.api.model.KResponse
 import com.past3.ketro.api.model.StatusCode
 import com.past3.ketro.api.model.Wrapper
@@ -9,7 +8,6 @@ import retrofit2.Response
 abstract class Request<out T : Any>(
     private val errorHandler: ApiErrorHandler = ApiErrorHandler()
 ) {
-
     abstract suspend fun apiRequest(): Response<out T>
 
     open suspend fun doRequest(): Wrapper<out T> {
@@ -40,13 +38,11 @@ abstract class Request<out T : Any>(
         }
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun <T> handleResponseData(data: T?, statusCode: StatusCode): Wrapper<out T> {
+    private fun <T> handleResponseData(data: T?, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(data = data, statusCode = statusCode)
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun <T> handleError(response: Response<T>, statusCode: StatusCode): Wrapper<out T> {
+    private fun <T> handleError(response: Response<T>, statusCode: StatusCode): Wrapper<out T> {
         return Wrapper(errorHandler.getExceptionType(response), statusCode = statusCode)
     }
 }
