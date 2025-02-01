@@ -1,6 +1,5 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.api.model.StatusCode
 import retrofit2.Call
 import retrofit2.Callback
 

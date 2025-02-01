@@ -1,4 +1,4 @@
-package com.past3.ketro.api.model
+package com.past3.ketro.api
 
 sealed class KResponse<out T>(val statusCode: StatusCode) {
     class Success<T>(val data: T? = null, statusCode: StatusCode = StatusCode(-1)) :

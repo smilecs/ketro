@@ -1,8 +1,5 @@
 package com.past3.ketro.api
 
-import com.past3.ketro.api.model.KResponse
-import com.past3.ketro.api.model.StatusCode
-import com.past3.ketro.api.model.Wrapper
 import retrofit2.Response
 
 abstract class Request<out T : Any>(
